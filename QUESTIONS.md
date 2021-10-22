@@ -2,7 +2,7 @@
 
 What goes in `RIPE_PROBE_DATA` to satisfy mkit/ripteatlas/probes.py `init_probeset()`?
 It seems to be looking for a json file `"/home/%s/data/20180218.json" % user` which is
-probably some seed probe data. 
+probably some seed probe data.
 
 ### A:
 
@@ -10,7 +10,7 @@ probably some seed probe data.
 
 ## Q `PFX2ASN_DIR`
 Should `PFX2ASN_DIR` -- presumably where IP to ASN data is stored -- match the
-`PFX2ASN_DATA_OLD` or `PFX2ASN_DATA_v6` fields from mkit or are they 
+`PFX2ASN_DATA_OLD` or `PFX2ASN_DATA_v6` fields from mkit or are they
 independent values?
 
 
@@ -30,7 +30,7 @@ What needs to go in this value? it seems like this has to go in consts.py\?
 
 where do we get the files for `CAIDA_AS2ORG` from?
 
-## Q  Example consts file 
+## Q  Example consts file
 
 Would it be possible to get an example consts file with annotations about
 the purpose of each value, and source for any that are file paths to data
@@ -38,7 +38,7 @@ sources expected by the app
 
 
 
-## Directory layout - 
+## Directory layout -
 ```txt
 .
 ├── api.py

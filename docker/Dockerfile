@@ -33,11 +33,11 @@ CMD [ "sh", "-c", "python ./parse_traces_offline.py $NODE_GRANULARITY $GLOBAL_DA
 
 
 FROM base as build_sim_bgp_graphs
-CMD [ "sh", "-c", "python ./parse_traces_offline.py $NODE_GRANULARITY $GLOBAL_DATE" ]
+CMD [ "sh", "-c", "python ./build_sim_bgp_graphs.py"]
 
 
 FROM base as api
-CMD [ "sh", "-c", "python ./parse_traces_offline.py $NODE_GRANULARITY $GLOBAL_DATE" ]
+CMD [ "sh", "-c", "python ./api.py" ]
 
 FROM base as combine_dags
-CMD [ "sh", "-c", "python ./parse_traces_offline.py $NODE_GRANULARITY $GLOBAL_DATE" ]
+CMD [ "sh", "-c", "python ./combine_dags_src_dst.py" ]
