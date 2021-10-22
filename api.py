@@ -13,7 +13,7 @@ from itertools import count
 import math
 from operator import mul
 import os
-from graph_tool.all import *
+# from graph_tool.all import *
 import mkit.ripeatlas.probes as prb
 from ripe.atlas.sagan import Result
 import mkit.inference.ixp as ixp

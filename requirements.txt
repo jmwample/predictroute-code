@@ -1,2 +1,8 @@
 py-radix
-graph-tool
+python-dateutil
+ipaddress
+timeout-decorator
+beanstalkc
+ripe.atlas.sagan
+ripe.atlas.cousteau
+pygeoip
