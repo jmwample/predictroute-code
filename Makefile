@@ -1,5 +1,6 @@
 
-IMAGE_NAME=predict-route
+# IMAGE_NAME=predict-route
+IMAGE_NAME=graph-tool-testing
 
 all:
 	docker build -t ${IMAGE_NAME} -f docker/Dockerfile .
