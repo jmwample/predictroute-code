@@ -7,3 +7,9 @@ all:
 
 run:
 	docker run -it --rm --name ${IMAGE_NAME}-run ${IMAGE_NAME}
+
+test:
+	docker build -t conda-test --target test -f docker/Dockerfile .
+
+test-run:
+	docker run -it --rm --name conda-test-run conda-test
