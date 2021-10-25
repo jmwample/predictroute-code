@@ -1,16 +1,25 @@
 # PredictRoute
 
-To Start using PredictRoute, follow these steps:
+To start using PredictRoute, follow these steps:
 
-1. Create a file `consts.py` with directories that contain your traceroute datasets. The location of the traceroutes is used in `api.py`.
-2. Download RIPE traceroutes either from the RIPE measurement page or from the FTP link with daily dumps of public traces.
-3. Store RIPE traces at a location defined in `consts.py` called `RIPE_DAILY_DUMPS`.
-4. `parse_traces_offline.py` will create several processes to parse these daily dumps, one for each day's compressed traceroutes. This code mainly refers to `compute_dest_based_graphs_offline` which has much of the logic for parsing large quantities of traceroute data in parallel, creating graphs at prefix or ASN level and committing them to disk.
-5. The graphs are stored in `.gt` format which can be opened using the `graph-tool` library.
-6. Once the graphs for a single day's worth of traces are stored, they are combined with graphs from before. This job is done by `combine_dags_src_dst.py`.
-7. The processes of downloading, parsing, building graphs  and combining them with previous graphs can be easily made into cron jobs. Shell scripts to run this code are also checked into the repo.
+1. Create a file `consts.py` and fill in all the variables mentioned in the [Required Files & Global Vars](#required-files--global-vars) section below.
 
-## Required Files && Global Vars
+2. Dowload all supplementatal data sources described in [Required Files & Global Vars](#required-files--global-vars)
+
+3. Download RIPE traceroutes either from the RIPE measurement page or from the FTP link with daily dumps of public traces. Store the RIPE traces at the location defined in `consts.py` called `RIPE_DAILY_DUMPS`.
+
+4. Run beanstalkd, which is used to share messages. A [docker image](https://hub.docker.com/r/schickling/beanstalkd) is avaliable.
+
+5. Install BGPSim somehow (maybe [this one](http://www.huge-man-linux.net/man8/bgpsim.html)?)
+
+6. `parse_traces_offline.py` will create several processes to parse these daily dumps, one for each day's compressed traceroutes. This code mainly refers to `compute_dest_based_graphs_offline` which has much of the logic for parsing large quantities of traceroute data in parallel, creating graphs at prefix or ASN level and committing them to disk.
+    - The graphs are stored in `.gt` format which can be opened using the [graph-tool](https://graph-tool.skewed.de/) library.
+
+7. Once the graphs for a single day's worth of traces are stored, they are combined with graphs from before. This job is done by `combine_dags_src_dst.py`.
+
+8. The processes of downloading, parsing, building graphs  and combining them with previous graphs can be easily made into cron jobs. Shell scripts to run this code are also checked into the repo.
+
+## Required Files & Global Vars
 
 Both the PredictRoute library and it's dependency
 [m-kit](https://github.com/racheesingh/m-kit) require various
@@ -22,9 +31,11 @@ download required data.
 
 Variables that **must** be defined in `consts.py`:
 
-- `RIPE_DAILY_DUMPS` - path to directory where daily RIPE Atlas data will be pulled. When processing traceroutes `parse_traces_offline.py` checks the date in the fname; if running using the `global_date` option (`sys.argv[2]`) it will only include files for the specified date, otherwise all days will be processed.
+- `RIPE_DAILY_DUMPS` - path to directory where daily RIPE Atlas data will be pulled. When processing traceroutes `parse_traces_offline.py` checks the date in the fname; if running using the `global_date` option (`sys.argv[2]`) it will only include files for the specified date, otherwise all days will be processed. The location of the traceroutes is used in `api.py`.
 
 - `PFX2ASN_DIR`
+
+- `HIST_DATA`
 
 - `RIPE_PROBE_METADATA`
 

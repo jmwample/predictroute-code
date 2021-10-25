@@ -7,3 +7,5 @@ PFX2ASN_DIR = "./data/PFX2ASN/"
 RIPE_PROBE_METADATA = "/home/root/data/20180218.json"
 
 CAIDA_AS2ORG = "/home/root/data/CAIDA_AS2ORG.dat"
+
+HIST_DATA = ""
