@@ -16,11 +16,12 @@ for msm in msms:
         print "failed", msm
         msms_sane.append(msm)
         continue
-    if info['status']['name'].strip().lower() == 'failed': continue
-    if info['stop_time'] and int(info['stop_time']) < 1514764800: continue
+    if info['status']['name'].strip().lower() == 'failed':
+        continue
+    if info['stop_time'] and int(info['stop_time']) < 1514764800:
+        continue
     msms_sane.append(msm)
 
 print len(msms), len(msms_sane)
 with open(msm_fname + "_sane", "w") as fi:
     json.dump(msms_sane, fi)
-    

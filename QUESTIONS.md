@@ -4,15 +4,12 @@ What goes in `RIPE_PROBE_DATA` to satisfy mkit/ripteatlas/probes.py `init_probes
 It seems to be looking for a json file `"/home/%s/data/20180218.json" % user` which is
 probably some seed probe data.
 
-### A:
-
-
+**A:** ???
 
 ## Q `PFX2ASN_DIR`
 Should `PFX2ASN_DIR` -- presumably where IP to ASN data is stored -- match the
 `PFX2ASN_DATA_OLD` or `PFX2ASN_DATA_v6` fields from mkit or are they
 independent values?
-
 
 ## Q Missing `settings` module in api.py
 
@@ -20,11 +17,9 @@ Should there be a file settings.py locally that stores something to change the
 way the api runs or is there some python2 `settings` module that is pulled from
 a repo somewhere?
 
-
 ## Q `RIPE_PROBE_METADATA`
 
-What needs to go in this value? it seems like this has to go in consts.py\?
-
+What needs to go in this value? it seems like this has to go in consts.py?
 
 ## Q `CAIDA_AS2ORG`
 
@@ -36,9 +31,25 @@ Would it be possible to get an example consts file with annotations about
 the purpose of each value, and source for any that are file paths to data
 sources expected by the app
 
+## Q  RIPE Atlas API Key permissions required?
 
+What permissions are required for the RIPE Atlas keys?
 
-## Directory layout -
+- launching traceroutes
+- retreiving results
+- checking balances?
+
+## ~~Q~~  RIPE API v1
+
+This library is using API v1, will that continue to work / be documented
+accurately?
+
+**A:** This is only a global var in `topology_discovery/greedy_adaptive.py` However,
+it isn't actually referenced anywhere in the file and it doesn't seem to be used.
+This is the only place the v1 API uri shows up. 
+
+## Directory layout
+
 ```txt
 .
 ├── api.py
@@ -68,3 +79,9 @@ sources expected by the app
     ├── get_ripe_measurement.py
     └── greedy_adaptive.py
 ```
+
+---
+
+4. M-kit requires various resources on import, some of which reference data multiple years old. Are these required / used in construction / computation of DAGS and if so should they be updated to use more recent data in our environment? (e.g. 2017 pfx2as data and 2018 RIPE Probe data)
+
+5. Was the GeoIPASNum.dat file a free MaxMind dataset? I know MaxMind has transitioned to offering their Geolite2 ASN data set (in .mmdb or .csv) I assume that is the current equivalent.

@@ -30,18 +30,13 @@ if sys.argv[1] == 'adaptive':
 else:
     adaptive = False
 bgp_graphs_dir = "graph_bgp_sim/"
-ATLAS_API_KEY_RS = "884f6bac-70cc-4451-ab69-b7df255f1b51"
-ATLAS_API_KEY_PG = "3a692f03-6ad4-421c-9049-979b9298d227"
-ATLAS_API_KEY_RS2 = "72a0b179-8058-423d-aae5-c1d275638d54"
-API_HOST = 'https://atlas.ripe.net'
-API_MMT_URI = 'api/v1/measurement'
 MSM_BUDGET = 10
 
 private_addr_radix = radix.Radix()
 private_adrs = ['192.168.0.0/16', '10.0.0.0/8', '172.16.0.0/12']
 for addr in private_adrs:
     private_addr_radix.add(addr)
-    
+
 def filter_cruft(data):
     if 'result' in data:
         res = data['result']
@@ -53,7 +48,7 @@ def filter_cruft(data):
 def get_probes_from_metadata(fname):
     with open(fname) as fi:
         probe_meta = json.load(fi)
-    ripe_probes = {}        
+    ripe_probes = {}
     for pr in probe_meta['objects']:
         if 'system-ipv4-works' in pr['tags']:
             if pr['asn_v4'] in ripe_probes:
@@ -86,8 +81,8 @@ else:
     with open("data/random_ips.json") as fi:
         all_prefs = json.load(fi)
     all_prefs = all_prefs.values()
-    pref_typ = "random" 
-                
+    pref_typ = "random"
+
 def most_promising_measurement(gr, vantage_points):
     per_vp_gain = {}
     for vp_asn in vantage_points:
@@ -125,7 +120,7 @@ def run_trace(prefix, gr, vp_asn):
     )
     atlas_request = AtlasCreateRequest(
         start_time=datetime.utcnow(),
-        key=ATLAS_API_KEY_RS2,
+        key=ATLAS_API_KEY,
         measurements=[traceroute],
         sources=[source],
         is_oneoff=True
@@ -138,14 +133,14 @@ def get_gain(msm_id, gr, vp_asn, predicted_gain_set, adaptive=True):
     while not results:
         is_success, results = AtlasResultsRequest(msm_id=msm_id).create()
         if not is_success: return 0
-        
+
     traceroutes = []
     for result in results:
         data = filter_cruft(result)
         if 'result' in data:
             traceroutes.append(data)
     assert len(traceroutes) == 1
-    
+
     iplinks = Result.get(traceroutes[0]).ip_path
     ases_seen = set()
     for ip_link_set in iplinks:
@@ -153,7 +148,7 @@ def get_gain(msm_id, gr, vp_asn, predicted_gain_set, adaptive=True):
         if not ip: continue
         asn = ip2asn.ip2asn_bgp(ip)
         ases_seen.add(asn)
-        
+
     if adaptive:
         for asn in ases_seen:
             if str(asn) in gr.node and 'seen' not in gr.node[str(asn)]:
@@ -162,7 +157,7 @@ def get_gain(msm_id, gr, vp_asn, predicted_gain_set, adaptive=True):
         for asn in predicted_gain_set:
             if str(asn) in gr.node and 'seen' not in gr.node[str(asn)]:
                 gr.node[str(asn)]['seen'] = True
-                
+
     return ases_seen, gr
 
 def get_coverage(gr):
@@ -231,7 +226,7 @@ for top_content_pref in all_prefs:
         with open(bgp_graphs_dir + asn) as fi:
             jsonStr = json.load(fi)
         gr = json_graph.node_link_graph(jsonStr)
-        
+
     if not gr.nodes(): continue
     print "Top content prefix", top_content_pref
     print "Prefix belongs to asn", asn

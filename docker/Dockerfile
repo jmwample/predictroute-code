@@ -1,9 +1,9 @@
 # continuum.io is the org that maintains and distributes anaconda / miniconda3
 FROM continuumio/miniconda3 as base
- 
+
 # Set working directory for the project
 WORKDIR /usr/src/app
- 
+
 # Install dependencies required by python libs
 RUN apt-get update
 RUN apt-get install -y -q libxi6 libgconf-2-4 libxfixes-dev libxcursor1 libxdamage-dev libxcomposite-dev libxrandr-dev libxinerama1 build-essential
@@ -16,10 +16,18 @@ COPY requirements.txt .
 RUN conda install -n gt pip
 RUN conda run -n gt /bin/bash -c "python -m pip install --upgrade pip && python -m pip install --no-cache-dir -r requirements.txt"
 
+
+# Install bgpsim
+
 # Determine node granularity when parsing traceroutes in to graph
 #       one of 'asn', 'bgp_pfx' or 'pfx'
-ENV NODE_GRANULARITY="asn" \
-    GLOBAL_DATE="abc"
+#
+# ENV vars ar eavailable to built image and can be over-ridden with one of:
+#   Docker run -e "NODE_GRANULARITY=pfx" ...
+#   Docker run -e NODE_GRANULARITY  ...       # Draws from host env
+#   Docker run -env_file=<path_to_file> ...   # Draws from file
+ENV NODE_GRANULARITY=asn \
+    GLOBAL_DATE=abc
 
 # Override default shell and use bash
 SHELL ["conda", "run", "-n", "gt", "/bin/bash", "-c"]
@@ -28,9 +36,12 @@ SHELL ["conda", "run", "-n", "gt", "/bin/bash", "-c"]
 # Install non-pip mkit dependency from source
 RUN git clone https://github.com/racheesingh/m-kit.git && \
     cd m-kit && python setup.py install
-# mkit expects a set of probes in /home/${user}/data/20180218.json and a csv
-# list of IXPs in /home/${user}/data/all_ixps.csv in order to init 
-# the library (i.e. on import)
+
+# in order to init the library (i.e. on import) mkit expects:
+#   * a csv list of IXPs in /home/${user}/data/all_ixps.csv
+#   * two routeviews data files (one v4  and one v6) for prefix ASN conversion
+#   * Maxmind GeoIP to ASN data source (as .dat?)
+#   * a set of RIPE Atlas probes in /home/${user}/data/20180218.json
 RUN mkdir -p /home/root/data/ && \
     touch /home/root/data/all_ixps.csv && \
     touch /home/root/data/routeviews-rv2-20160101-1200.pfx2as && \

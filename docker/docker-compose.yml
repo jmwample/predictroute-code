@@ -1,0 +1,54 @@
+version: 3
+services:
+
+  beanstalkd:
+    # https://hub.docker.com/r/schickling/beanstalkd
+    # https://github.com/beanstalkd/beanstalkd
+    image: schickling/beanstalkd:latest
+    privileged: true
+    ports: 11300:11300
+    restart: unless-stopped
+
+  api:
+    image: api:latest
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      target: api
+    restart: unless-stopped
+    depends_on:
+      - beanstalkd
+
+
+  parse-traces:
+    image: parse_traces_offline:latest
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      target: parse_traces_offline
+    restart: unless-stopped
+    depends_on:
+      - beanstalkd
+
+  build-graphs:
+    image: build_sim_bgp_graphs:latest
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      target: build_sim_bgp_graphs
+    restart: unless-stopped
+    depends_on:
+      - parse-traces
+      - beanstalkd
+
+  combine-dags:
+    image: combine_dags:latest
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      target: combine_dags
+    restart: unless-stopped
+    depends_on:
+      - parse-traces
+      - build-graphs
+      - beanstalkd

@@ -2,6 +2,8 @@
 
 To start using PredictRoute, follow these steps:
 
+0. Create a RIPE atlas account and [register an API key](https://labs.ripe.net/author/alun_davies/changes-to-ripe-atlas-api-keys/).
+
 1. Create a file `consts.py` and fill in all the variables mentioned in the [Required Files & Global Vars](#required-files--global-vars) section below.
 
 2. Dowload all supplementatal data sources described in [Required Files & Global Vars](#required-files--global-vars)
@@ -39,9 +41,10 @@ Variables that **must** be defined in `consts.py`:
 
 - `RIPE_PROBE_METADATA`
 
-- `ATLAS_API_KEY_PG` - probably want this in consts (don't publish)
-- `ATLAS_API_KEY_RS` - probably want this in consts (don't publish)
-- `ATLAS_API_KEY_RS2` -
+- `ATLAS_API_KEY` - RIPE API Key (DO NOT PUBLISH)
+- `ATLAS_API_KEY_PG`
+- `ATLAS_API_KEY_RS`
+- `ATLAS_API_KEY_RS2`
 
 - `CAIDA_AS2ORG` - File path pointing to CAIDA ASN to Organization data described below.
 
@@ -53,15 +56,18 @@ Files:
 
 These files are required by the [m-kit](https://github.com/racheesingh/m-kit) library as they are parsed on init (import). The paths are fixed, with the exception of the username which is added in on import - so the path should reflect whatever user will be running the python files.
 
-- `/home/${USER}/data/all_ixps.csv`
+- `/home/${USER}/data/all_ixps.csv` - list of IXP addresses to filter - drawn
+from PeeringDB.
 
-- `/home/${USER}/data/routeviews-rv2-20160101-1200.pfx2as`
+- `/home/${USER}/data/routeviews-rv2-20160101-1200.pfx2as` - Prefix to ASN mapping from CAIDA Routeviews (v4)
 
-- `/home/${USER}/data/routeviews-rv6-20161224-1200.pfx2as`
+- `/home/${USER}/data/routeviews-rv6-20161224-1200.pfx2as` - Prefix to ASN mapping from CAIDA Routeviews (v6)
 
-- `/home/${USER}/data/GeoIPASNum.dat`
+- `/home/${USER}/data/GeoIPASNum.dat` - MaxMind IP to ASN mapping dataset. From
+the historical maxmind free IP2ASN dataset.
 
-- `/home/${USER}/data/20180218.json`
+- `/home/${USER}/data/20180218.json` - RIPE atlas probe metadata. Can be found
+on the [ripe atlas archives](https://ftp.ripe.net/ripe/atlas/probes/archive/2018/02/).
 
 ## Workflow
 
